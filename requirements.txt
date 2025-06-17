@@ -1,2 +1,7 @@
 streamlit
 pdf2docx
+fpdf
+Pillow
+PyMuPDF
+comtypes; sys_platform == 'win32'
+fpdf2
