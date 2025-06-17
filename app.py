@@ -5,7 +5,6 @@ from PIL import Image
 import fitz  # PyMuPDF
 import os
 import uuid
-import comtypes.client
 
 st.set_page_config(page_title="Document Toolkit", layout="centered")
 
@@ -48,35 +47,11 @@ def pdf_to_word():
         except Exception as e:
             st.error(f"❌ Error: {e}")
 
-# --- Tool: Word to PDF (Windows only via comtypes) ---
+# --- Tool: Word to PDF (temporarily disabled) ---
 def word_to_pdf():
     st.title("📝 Word to PDF Converter")
     st.markdown("Convert your Word document to PDF.")
-    uploaded_file = st.file_uploader("Upload DOCX file", type=["docx"])
-
-    if uploaded_file:
-        file_id = str(uuid.uuid4())
-        input_docx = os.path.join(os.getcwd(), f"{file_id}.docx")
-        output_pdf = os.path.join(os.getcwd(), f"{file_id}.pdf")
-
-        with open(input_docx, "wb") as f:
-            f.write(uploaded_file.read())
-
-        try:
-            word = comtypes.client.CreateObject('Word.Application')
-            doc = word.Documents.Open(input_docx)
-            doc.SaveAs(output_pdf, FileFormat=17)
-            doc.Close()
-            word.Quit()
-
-            with open(output_pdf, "rb") as f:
-                st.success("✅ Done!")
-                st.download_button("⬇️ Download PDF File", f, file_name="converted.pdf")
-
-            os.remove(input_docx)
-            os.remove(output_pdf)
-        except Exception as e:
-            st.error(f"❌ Error: {e}")
+    st.warning("⚠️ Word to PDF is currently not supported on Streamlit Cloud. Support will be added soon.")
 
 # --- Tool: Compress PDF (PyMuPDF) ---
 def compress_pdf():
@@ -94,13 +69,6 @@ def compress_pdf():
 
         try:
             pdf = fitz.open(input_path)
-            for page in pdf:
-                for img in page.get_images(full=True):
-                    xref = img[0]
-                    base_image = pdf.extract_image(xref)
-                    image_bytes = base_image["image"]
-                    image = Image.open(io.BytesIO(image_bytes))
-                    image.save(io.BytesIO(), format="JPEG", optimize=True, quality=60)
             pdf.save(output_path, garbage=4, deflate=True)
 
             with open(output_path, "rb") as f:
