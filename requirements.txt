@@ -3,5 +3,5 @@ pdf2docx
 fpdf
 Pillow
 PyMuPDF
-comtypes; sys_platform == 'win32'
+subprocess
 fpdf2
