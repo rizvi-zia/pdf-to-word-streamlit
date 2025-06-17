@@ -3,5 +3,3 @@ pdf2docx
 fpdf
 Pillow
 PyMuPDF
-subprocess
-fpdf2
