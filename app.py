@@ -12,8 +12,6 @@ st.set_page_config(page_title="Document Toolkit", layout="centered")
 st.sidebar.title("📚 Document Toolkit")
 tool = st.sidebar.radio("Choose a tool", [
     "PDF to Word",
-    "Word to PDF",
-    "Compress PDF",
     "JPG to PDF",
     "PDF to JPG"
 ])
@@ -44,39 +42,6 @@ def pdf_to_word():
 
             os.remove(input_pdf)
             os.remove(output_docx)
-        except Exception as e:
-            st.error(f"❌ Error: {e}")
-
-# --- Tool: Word to PDF (temporarily disabled) ---
-def word_to_pdf():
-    st.title("📝 Word to PDF Converter")
-    st.markdown("Convert your Word document to PDF.")
-    st.warning("⚠️ Word to PDF is currently not supported on Streamlit Cloud. Support will be added soon.")
-
-# --- Tool: Compress PDF (PyMuPDF) ---
-def compress_pdf():
-    st.title("📉 Compress PDF")
-    st.markdown("Reduce PDF file size while maintaining quality.")
-    uploaded_file = st.file_uploader("Upload PDF file", type=["pdf"])
-
-    if uploaded_file:
-        file_id = str(uuid.uuid4())
-        input_path = f"/tmp/{file_id}_input.pdf"
-        output_path = f"/tmp/{file_id}_compressed.pdf"
-
-        with open(input_path, "wb") as f:
-            f.write(uploaded_file.read())
-
-        try:
-            pdf = fitz.open(input_path)
-            pdf.save(output_path, garbage=4, deflate=True)
-
-            with open(output_path, "rb") as f:
-                st.success("✅ Compression complete!")
-                st.download_button("⬇️ Download Compressed PDF", f, file_name="compressed.pdf")
-
-            os.remove(input_path)
-            os.remove(output_path)
         except Exception as e:
             st.error(f"❌ Error: {e}")
 
@@ -130,10 +95,6 @@ def pdf_to_jpg():
 # --- Router ---
 if tool == "PDF to Word":
     pdf_to_word()
-elif tool == "Word to PDF":
-    word_to_pdf()
-elif tool == "Compress PDF":
-    compress_pdf()
 elif tool == "JPG to PDF":
     jpg_to_pdf()
 elif tool == "PDF to JPG":
